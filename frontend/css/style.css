@@ -1,0 +1,92 @@
+html {
+    overflow: -moz-scrollbars-vertical;
+    background-color: #16181d;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    background-color: #31353a;
+	font-family: Arial, Helvetica, sans-serif;
+    width: 80%;
+	font-size: 14px;
+    text-align: left;
+    margin: auto;
+    border: 2px solid black;
+}
+
+.innerbody {
+    max-width: 90%;
+    margin: auto;
+    margin-top: 35px;
+}
+
+.navextra {
+    background-color: #202223;
+    position: fixed;
+    max-width: 80%;
+    margin: auto;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border: 2px solid black;
+}
+
+.nav-item.active, .nav-link:hover {
+    background-color: #31353a;
+}
+
+.circleimg {
+    width: 300px;
+    min-width: 300px;
+    max-width: 300px;
+    height: 300px;
+    min-height: 300px;
+    min-height: 300px;
+    background-size: 300px 300px;
+    background-image: url('/img/Tiantong.png');
+    border: 2px solid white;
+    background-position: 32% center;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+}
+.mainrow {
+    padding-top: 50px;
+    padding-bottom: 10px;
+}
+
+.maintext {
+    padding-left: 30px;
+    font-size: 50px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+
+.subtext {
+    padding-left: 30px;
+    padding-bottom:20px;
+    font-size: 20px;
+    color: #cccccc;
+    font-weight: normal;
+}
+
+.adminpage {
+    text-align: center;
+}
+
+.form_element {
+    width: 30%;
+    margin: auto;
+}
+
+@media (min-width: 700px){
+    .navbar li {
+        font-weight: bold;
+        font-size: 15px;
+        margin-left : 1em;
+        margin-right : 1em;
+    }
+}
