@@ -7,7 +7,32 @@ var bodyParser = require('body-parser');
 var mongo = require('mongodb');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+var url = "mongodb://txadmin:Scarlet6@ds127063.mlab.com:27063/txsitedb";
 var db;
+var userdb;
+
+var authorized = false;
+
+var User = function (user) {
+    var salt = crypto.randomBytes(16).toString('base64');
+    var hash = crypto.createHmac('sha512', salt);
+    hash.update(user.password);
+    this.username = user.username;
+    this.salt = salt;
+    this.saltedHash = hash.digest('base64');
+};
+
+var validateInfo = function (user, password) {
+	var hash = crypto.createHmac('sha512', user.salt);
+	hash.update(password);
+	return (user.saltedHash === hash.digest('base64'));
+};
+
+mongo.connect(url, function(err, db) {
+  if (err) throw err;
+  var userdb = db.collection('admin');
+  db.close();
+});
 
 // require("jsdom").env("", function(err, window) {
 //     if (err) {
@@ -37,14 +62,28 @@ app.get('/', function (req, res, next) {
     return res.redirect('index.html');
 });
 
-app.post('/experience', function (req, res, next) {
+app.post('/api/experience/', function (req, res, next) {
 	console.log(req.body);
   	return res.redirect('/index.html');
 });
 
-app.post('/login', function (req, res, next) {
-	console.log(req.body);
+app.post('/api/signin/', function (req, res, next) {
+	if (!req.body.username || !req.body.password) return res.status(400).send("Insufficient info");
+	db.findOne({username: req.body.username}, function(err, user) {
+		if (err) return res.status(500).end(error);
+		if (!user || !validateInfo(user, req.body.password)) return res.status(401).end("Incorrect username/password");
+		authorized = true;
+	});
+	console.log("logged in :DDDDD");
   	return res.redirect('/index.html');
+});
+
+app.get('/api/signout/', function (req, res, next) {
+    // req.session.destroy(function(err) {
+    //     if (err) return res.status(500).end(err);
+    //     return res.end();
+    // });
+	authorized = false;
 });
 
 var http = require('http');

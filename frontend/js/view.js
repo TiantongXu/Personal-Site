@@ -30,7 +30,7 @@ var view = (function(){
         };
     };
 
-        view.renderPage = function(e) {
+    view.renderPage = function (e) {
         switch (e.detail) {
             case "about":
                 $(".container").load("./tmp/about.html");
@@ -47,31 +47,40 @@ var view = (function(){
             case "admin":
                 $(".container").empty();
                 selectItem("admin");
-                var container = document.getElementById('container');
-                container.innerHTML = "";
-                var doc = document.createElement('div');
-                doc.className = "row align-items-center mainrow adminpage";
-                doc.innerHTML = `<div class="col-lg-12 maintext">
-    Admin Login
-</div>`;
-                var submitbutton = document.createElement('div');
-                submitbutton.className = "col-lg-12 subtext";
-                submitbutton.innerHTML = `<div class="col-lg-12 subtext">
-    <button type="submit" class="btn">Login</button>
-</div>`;
-                submitbutton.onclick = function (e) {
-                    console.log("finally works :D");
-                };
-                doc.append(submitbutton);
-                container.prepend(doc);
+                view.renderAbout();
                 break;
         };
     };
 
-    // document.getElementById("post_form").onsubmit = function (e) {
-    //     e.preventDefault();
-    //     console.log('click');
-    //     }
+    view.renderAbout = function () {
+        var container = document.getElementById('container');
+        container.innerHTML = "";
+        var doc = document.createElement('div');
+        doc.className = "row align-items-center mainrow adminpage";
+        doc.innerHTML = `<div class="col-lg-12 maintext">
+    Admin Login
+</div>`;
+        var innertext = document.createElement('div');
+        innertext.className = "col-lg-12 subtext";
+        var innerform = document.createElement('form');
+        innerform.id = "signin";
+        innerform.innerHTML = `
+        <input type="text" name="username" id="username" class="form-control form_element" placeholder="Username"/>
+        <br>
+        <input type="password" name="password" id="password" class="form-control form_element" placeholder="Password"/>
+        <br>
+        <button type="submit" class="btn">Login</button>`;
+        innerform.onsubmit = function (e) {
+            e.preventDefault();
+            var info = {};
+            info.username = document.getElementById("username").value;
+            info.password = document.getElementById("password").value;
+            console.log(info);
+        }
+        innertext.append(innerform);
+        doc.append(innertext);
+        container.prepend(doc);
+    }
     
     return view;
     

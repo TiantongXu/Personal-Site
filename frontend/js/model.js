@@ -12,31 +12,32 @@ var model = (function(){
 
     // };
 
-    // var doAjax = function (method, url, body, json, callback){
-    //     var xhttp = new XMLHttpRequest();
-    //     xhttp.onreadystatechange = function(e){
-    //         switch(this.readyState){
-    //              case (XMLHttpRequest.DONE):
-    //                 if (this.status === 200) {
-    //                     if(json) return callback(null, JSON.parse(this.responseText));
-    //                     return callback(null, this.responseText);
-    //                 }else{
-    //                     return callback(this.responseText, null);
-    //                 }
-    //         }
-    //     };
-    //     xhttp.open(method, url, true);
-    //     if (json && body){
-    //         xhttp.setRequestHeader('Content-Type', 'application/json');
-    //         xhttp.send(JSON.stringify(body));  
-    //     }else{
-    //         xhttp.send(body);  
-    //     }        
-    // };
+    var doAjax = function (method, url, body, json, callback){
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function(e){
+            switch(this.readyState){
+                 case (XMLHttpRequest.DONE):
+                    if (this.status === 200) {
+                        if(json) return callback(null, JSON.parse(this.responseText));
+                        return callback(null, this.responseText);
+                    }else{
+                        return callback(this.responseText, null);
+                    }
+            }
+        };
+        xhttp.open(method, url, true);
+        if (json && body){
+            xhttp.setRequestHeader('Content-Type', 'application/json');
+            console.log(JSON.stringify(body));
+            xhttp.send(JSON.stringify(body));
+        } else {
+            xhttp.send(body);  
+        }        
+    };
 
-    model.signIn = function(e) {
-    	e.preventDefault(e);
-    	console.log("finally works");
+    model.signIn = function(data, callback) {
+    	doAjax('POST', '/api/signin/', data, true, function (err, user) {
+        });
     };
 
     return model;
