@@ -3,12 +3,12 @@
     	Admin Login
     </div>
     <div class="col-lg-12 subtext">
-		<form class="complex_form">
+		<form action="/login" method="POST" class="" id="post_form">
 			<div class="col-lg-12 subtext" id="signin">
-		  		<input type="text" id="username" class="form-control form_element" placeholder="Username"/>
+		  		<input type="text" name="username" id="username" class="form-control form_element" placeholder="Username"/>
 		  	</div>
 		  	<div class="col-lg-12 subtext" id="signin">
-		  		<input type="password" id="password" class="form-control form_element" placeholder="Password"/>
+		  		<input type="password" name="password" id="password" class="form-control form_element" placeholder="Password"/>
 		  	</div>
 		  	<div class="col-lg-12 subtext">
 		  		<button type="submit" class="btn">Login</button>

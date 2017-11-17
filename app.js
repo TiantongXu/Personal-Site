@@ -1,8 +1,13 @@
+var crypto = require('crypto');
+// var Memcached = require('memcached');
+// var memcached = new Memcached('localhost:11211');
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
+var mongo = require('mongodb');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+var db;
 
 // require("jsdom").env("", function(err, window) {
 //     if (err) {
@@ -30,6 +35,16 @@ app.use(express.static('frontend'));
 
 app.get('/', function (req, res, next) {
     return res.redirect('index.html');
+});
+
+app.post('/experience', function (req, res, next) {
+	console.log(req.body);
+  	return res.redirect('/index.html');
+});
+
+app.post('/login', function (req, res, next) {
+	console.log(req.body);
+  	return res.redirect('/index.html');
 });
 
 var http = require('http');
