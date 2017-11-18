@@ -81,6 +81,11 @@ body {
     margin: auto;
 }
 
+.error {
+    height: 30px;
+    width: 100%;
+}
+
 @media (min-width: 700px){
     .navbar li {
         font-weight: bold;

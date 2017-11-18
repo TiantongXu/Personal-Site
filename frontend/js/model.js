@@ -4,42 +4,43 @@ var model = (function(){
     var model = {};
     
     window.onload = function () {
-    	var event = new CustomEvent('startApp', {detail: "about"});
-  		document.dispatchEvent(event);
+        var event = new CustomEvent('startApp', {detail: "about"});
+        document.dispatchEvent(event);
     };
 
     // model.addExperience = function (data, callback) {
 
     // };
 
-    var doAjax = function (method, url, body, json, callback){
+    var callApi = function (method, url, body, isjson, callback){
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function(e){
-            switch(this.readyState){
+            switch(this.readyState) {
                  case (XMLHttpRequest.DONE):
                     if (this.status === 200) {
-                        if(json) return callback(null, JSON.parse(this.responseText));
+                        if(isjson) return callback(null, JSON.parse(this.responseText));
                         return callback(null, this.responseText);
-                    }else{
+                    } else {
                         return callback(this.responseText, null);
                     }
             }
         };
         xhttp.open(method, url, true);
-        if (json && body){
+        if (isjson && body){
             xhttp.setRequestHeader('Content-Type', 'application/json');
-            console.log(JSON.stringify(body));
             xhttp.send(JSON.stringify(body));
         } else {
-            xhttp.send(body);  
-        }        
+            xhttp.send(body);
+        }
     };
 
     model.signIn = function(data, callback) {
-    	doAjax('POST', '/api/signin/', data, true, function (err, user) {
+        callApi('POST', '/api/signin/', data, true, function (err, user) {
+            if (err) return callback(err, user);
+            callback(null, user);
         });
     };
 
     return model;
-    
+
 }());

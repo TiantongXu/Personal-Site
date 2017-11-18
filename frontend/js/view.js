@@ -52,12 +52,25 @@ var view = (function(){
         };
     };
 
+    var signinMessage = function (err) {
+        if (err) {
+            var e = document.getElementById("error");
+            e.innerHTML = `<span class="alert alert-danger">${(err)}</span>`;
+        }
+        else {
+            var e = document.getElementById("error");
+            e.innerHTML = `<span class="alert alert-success">Signin success</span>`;
+        }
+    }
+
     view.renderAbout = function () {
         var container = document.getElementById('container');
         container.innerHTML = "";
         var doc = document.createElement('div');
         doc.className = "row align-items-center mainrow adminpage";
-        doc.innerHTML = `<div class="col-lg-12 maintext">
+        doc.innerHTML = `<div class="error" id="error">
+</div>
+<div class="col-lg-12 maintext">
     Admin Login
 </div>`;
         var innertext = document.createElement('div');
@@ -75,7 +88,10 @@ var view = (function(){
             var info = {};
             info.username = document.getElementById("username").value;
             info.password = document.getElementById("password").value;
-            console.log(info);
+            model.signIn(info, function (err, user) {
+                if (err) return signinMessage(err);
+            });
+            signinMessage();
         }
         innertext.append(innerform);
         doc.append(innertext);
