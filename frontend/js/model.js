@@ -4,8 +4,9 @@ var model = (function(){
     var model = {};
     
     window.onload = function () {
-        var event = new CustomEvent('startApp', {detail: "about"});
-        document.dispatchEvent(event);
+        view.checkState();
+        view.initiatePage();
+        view.renderPage("about");
     };
 
     // model.addExperience = function (data, callback) {
@@ -39,6 +40,18 @@ var model = (function(){
             if (err) return callback(err, user);
             callback(null, user);
         });
+    };
+
+    model.getMessages = function (callback) {
+        callApi("GET", "/api/experience/", null, true, callback);
+    };
+
+    model.signOut = function (callback) {
+        callApi('GET', '/api/signout/', null, false, callback);
+    };
+
+    model.sign = function (callback) {
+        callApi('GET', '/api/sign/', null, false, callback);
     };
 
     return model;
