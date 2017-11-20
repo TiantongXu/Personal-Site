@@ -66,6 +66,30 @@ var model = (function(){
         callApi('GET', '/api/skills/', null, true, callback);
     };
 
+    model.updateExperience = function (data, callback) {
+        callApi('PATCH', '/api/experience/' + data._id + '/', data, true, callback);
+    };
+
+    model.updateEducation = function (data, callback) {
+        callApi('PATCH', '/api/education/' + data._id + '/', data, true, callback);
+    };
+
+    model.updateSkills = function (data, callback) {
+        callApi('PATCH', '/api/skills/' + data._id + '/', data, true, callback);
+    };
+
+    model.deleteExperience = function (data, callback) {
+        callApi('DELETE', '/api/experience/' + data._id + '/', null, false, callback);
+    };
+
+    model.deleteEducation = function (data, callback) {
+        callApi('DELETE', '/api/education/' + data._id + '/', null, false, callback);
+    };
+
+    model.deleteSkills = function (data, callback) {
+        callApi('DELETE', '/api/skills/' + data._id + '/', null, false, callback);
+    };
+
     model.signOut = function (callback) {
         callApi('GET', '/api/signout/', null, false, callback);
     };

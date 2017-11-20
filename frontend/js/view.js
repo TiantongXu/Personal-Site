@@ -147,6 +147,7 @@ var view = (function(){
                                 if (err) return console.log(err);
                             });
                         }
+                        $("#skills,#job,#education").empty();
                         renderResume(logstate);
                 };
                 break;
@@ -167,6 +168,7 @@ var view = (function(){
                                 if (err) return console.log(err);
                             });
                         }
+                        $("#skills,#job,#education").empty();
                         renderResume(logstate);
                 };
                 break;
@@ -193,6 +195,7 @@ var view = (function(){
                                 if (err) return console.log(err);
                             });
                         }
+                        $("#skills,#job,#education").empty();
                         renderResume(logstate);
                 };
                 break;
@@ -212,17 +215,19 @@ var view = (function(){
     <textarea rows="5" name="details" id='${data._id}' class="col-lg-12 form-control form_element" placeholder="Details">${data.details}</textarea>
 </div>
 <div class="col-lg-1 subtext">
-    <input type="submit" value="" class="resume_btn add_btn"></input>
+    <input type="submit" value="" class="resume_btn check_btn"></input>
 </div>`;
                 doc.onsubmit = function (e) {
                     e.preventDefault();
                         var info = {};
                         info.details = document.getElementById(data._id).value;
+                        info._id = data._id;
                         if (info.details) {
-                            model.addEducation(info, function(err) {
+                            model.updateEducation(info, function(err) {
                                 if (err) return console.log(err);
                             });
                         }
+                        $("#skills,#job,#education").empty();
                         renderResume(logstate);
                 };
                 break;
@@ -232,17 +237,19 @@ var view = (function(){
     <textarea rows="5" name="details" id='${data._id}' class="col-lg-12 form-control form_element" placeholder="Details">${data.details}</textarea>
 </div>
 <div class="col-lg-1 subtext">
-    <input type="submit" value="" class="resume_btn add_btn"></input>
+    <input type="submit" value="" class="resume_btn check_btn"></input>
 </div>`;
                 doc.onsubmit = function (e) {
                     e.preventDefault();
                         var info = {};
                         info.details = document.getElementById(data._id).value;
+                        info._id = data._id;
                         if (info.details) {
-                            model.addSkills(info, function(err) {
+                            model.updateSkills(info, function(err) {
                                 if (err) return console.log(err);
                             });
                         }
+                        $("#skills,#job,#education").empty();
                         renderResume(logstate);
                 };
                 break;
@@ -259,7 +266,7 @@ var view = (function(){
     <textarea rows="5" name="details" id='${detailsid}' class="col-lg-12 form-control form_element" placeholder="Details">${data.details}</textarea>
 </div>
 <div class="col-lg-1 subtext">
-    <input type="submit" value="" class="resume_btn add_btn"></input>
+    <input type="submit" value="" class="resume_btn check_btn"></input>
 </div>`;
                 doc.onsubmit = function (e) {
                     e.preventDefault();
@@ -268,19 +275,22 @@ var view = (function(){
                         info.employer = document.getElementById(employerid).value;
                         info.place = document.getElementById(placeid).value;
                         info.details = document.getElementById(detailsid).value;
+                        info._id = data._id;
                         if (info.date && info.employer && info.place && info.details) {
-                            model.addExperience(info, function(err) {
+                            model.updateExperience(info, function(err) {
                                 if (err) return console.log(err);
                             });
+                            $("#skills,#job,#education").empty();
+                            renderResume(logstate);
                         }
-                        renderResume(logstate);
                 };
                 break;
         };
         doc.className = "col-lg-12 row";
-        container.innerHTML = `<div class="row align-items-center mainrow">
-        </div>`;
-        container.prepend(doc);
+        var inner = document.createElement('div');
+        inner.className = "row align-items-center mainrow";
+        inner.append(doc);
+        container.prepend(inner);
     };
 
     var renderResume = function (state) {
