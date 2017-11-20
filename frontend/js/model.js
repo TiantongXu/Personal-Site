@@ -56,7 +56,15 @@ var model = (function(){
 
     model.getExperience = function (callback) {
         callApi('GET', '/api/experience/', null, true, callback);
-    }
+    };
+
+    model.getEducation = function (callback) {
+        callApi('GET', '/api/education/', null, true, callback);
+    };
+
+    model.getSkills = function (callback) {
+        callApi('GET', '/api/skills/', null, true, callback);
+    };
 
     model.signOut = function (callback) {
         callApi('GET', '/api/signout/', null, false, callback);

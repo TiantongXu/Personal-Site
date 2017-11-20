@@ -132,8 +132,7 @@ var view = (function(){
         switch (type) {
             case "education":
                 var container = document.getElementById('education_add');
-                doc.id = "education_form";
-                doc.innerHTML = `<div class="col-lg-11 subtext row">
+                doc.innerHTML = `Add Education:<div class="col-lg-11 subtext row">
     <textarea rows="5" name="details" id="education_details" class="col-lg-12 form-control form_element" placeholder="Details"></textarea>
 </div>
 <div class="col-lg-1 subtext">
@@ -153,8 +152,7 @@ var view = (function(){
                 break;
             case "skills":
                 var container = document.getElementById('skills_add');
-                doc.id = "skills_form";
-                doc.innerHTML = `<div class="col-lg-11 subtext row">
+                doc.innerHTML = `Add Skills:<div class="col-lg-11 subtext row">
     <textarea rows="5" name="details" id="skills_details" class="col-lg-12 form-control form_element" placeholder="Details"></textarea>
 </div>
 <div class="col-lg-1 subtext">
@@ -174,8 +172,7 @@ var view = (function(){
                 break;
             case "experience":
                 var container = document.getElementById('job_add');
-                doc.id = "job_form";
-                doc.innerHTML = `<div class="col-lg-11 subtext row">
+                doc.innerHTML = `Add Job Experience:<div class="col-lg-11 subtext row">
     <input type="text" name="date" id="date" class="col-lg-4 form-control form-group form_element" placeholder="Date"/>
     <input type="text" name="employer" id="employer" class="col-lg-4 form-control form-group form_element" placeholder="Employer"/>
     <input type="text" name="place" id="place" class="col-lg-4 form-control form-group form_element" placeholder="Place"/>
@@ -206,11 +203,84 @@ var view = (function(){
         container.prepend(doc);
     };
 
-    var renderInfo = function (type) {
-        model.getExperience(function (err, data) {
-            if (err) return console.log(err);
-            console.log(data);
-        });
+    var renderInfoAdmin = function (type, data) {
+        var doc = document.createElement('form');
+        switch (type) {
+            case "education":
+                var container = document.getElementById('education');
+                doc.innerHTML = `<div class="col-lg-11 subtext row">
+    <textarea rows="5" name="details" id='${data._id}' class="col-lg-12 form-control form_element" placeholder="Details">${data.details}</textarea>
+</div>
+<div class="col-lg-1 subtext">
+    <input type="submit" value="" class="resume_btn add_btn"></input>
+</div>`;
+                doc.onsubmit = function (e) {
+                    e.preventDefault();
+                        var info = {};
+                        info.details = document.getElementById(data._id).value;
+                        if (info.details) {
+                            model.addEducation(info, function(err) {
+                                if (err) return console.log(err);
+                            });
+                        }
+                        renderResume(logstate);
+                };
+                break;
+            case "skills":
+                var container = document.getElementById('skills');
+                doc.innerHTML = `<div class="col-lg-11 subtext row">
+    <textarea rows="5" name="details" id='${data._id}' class="col-lg-12 form-control form_element" placeholder="Details">${data.details}</textarea>
+</div>
+<div class="col-lg-1 subtext">
+    <input type="submit" value="" class="resume_btn add_btn"></input>
+</div>`;
+                doc.onsubmit = function (e) {
+                    e.preventDefault();
+                        var info = {};
+                        info.details = document.getElementById(data._id).value;
+                        if (info.details) {
+                            model.addSkills(info, function(err) {
+                                if (err) return console.log(err);
+                            });
+                        }
+                        renderResume(logstate);
+                };
+                break;
+            case "experience":
+                var container = document.getElementById('job');
+                var dateid = data._id + "_date";
+                var employerid = data._id + "_employer";
+                var placeid = data._id + "_place";
+                var detailsid = data._id + "_details";
+                doc.innerHTML = `<div class="col-lg-11 subtext row">
+    <input type="text" name="date" id='${dateid}' class="col-lg-4 form-control form-group form_element" placeholder="Date" value='${data.date}'/>
+    <input type="text" name="employer" id='${employerid}' class="col-lg-4 form-control form-group form_element" placeholder="Employer" value='${data.employer}'/>
+    <input type="text" name="place" id='${placeid}' class="col-lg-4 form-control form-group form_element" placeholder="Place" value='${data.place}'/>
+    <textarea rows="5" name="details" id='${detailsid}' class="col-lg-12 form-control form_element" placeholder="Details">${data.details}</textarea>
+</div>
+<div class="col-lg-1 subtext">
+    <input type="submit" value="" class="resume_btn add_btn"></input>
+</div>`;
+                doc.onsubmit = function (e) {
+                    e.preventDefault();
+                        var info = {};
+                        info.date = document.getElementById(dateid).value;
+                        info.employer = document.getElementById(employerid).value;
+                        info.place = document.getElementById(placeid).value;
+                        info.details = document.getElementById(detailsid).value;
+                        if (info.date && info.employer && info.place && info.details) {
+                            model.addExperience(info, function(err) {
+                                if (err) return console.log(err);
+                            });
+                        }
+                        renderResume(logstate);
+                };
+                break;
+        };
+        doc.className = "col-lg-12 row";
+        container.innerHTML = `<div class="row align-items-center mainrow">
+        </div>`;
+        container.prepend(doc);
     };
 
     var renderResume = function (state) {
@@ -218,8 +288,25 @@ var view = (function(){
             renderBox("education");
             renderBox("skills");
             renderBox("experience");
+            model.getExperience(function (err, data) {
+                if (err) return console.log(err);
+                for (var i = 0; i < data.length; i ++) {
+                    renderInfoAdmin("experience", data[i]);
+                }
+            });
+            model.getEducation(function (err, data) {
+                if (err) return console.log(err);
+                for (var i = 0; i < data.length; i ++) {
+                    renderInfoAdmin("education", data[i]);
+                }
+            });
+            model.getSkills(function (err, data) {
+                if (err) return console.log(err);
+                for (var i = 0; i < data.length; i ++) {
+                    renderInfoAdmin("skills", data[i]);
+                }
+            });
         }
-        renderInfo("experience");
     };
     
     return view;

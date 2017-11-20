@@ -90,10 +90,32 @@ app.post('/api/education/', function (req, res, next) {
 	});
 });
 
-app.get('/api/experience', function (req, res, next) {
+app.get('/api/experience/', function (req, res, next) {
 	mongo.connect(url, function(err, db) {
 	if (err) throw err;
 		db.collection('experience').find().toArray(function (err, result) {
+			if (err) throw err;
+			return res.send(result);
+		});
+	db.close();
+	});
+});
+
+app.get('/api/education/', function (req, res, next) {
+	mongo.connect(url, function(err, db) {
+	if (err) throw err;
+		db.collection('education').find().toArray(function (err, result) {
+			if (err) throw err;
+			return res.send(result);
+		});
+	db.close();
+	});
+});
+
+app.get('/api/skills/', function (req, res, next) {
+	mongo.connect(url, function(err, db) {
+	if (err) throw err;
+		db.collection('skills').find().toArray(function (err, result) {
 			if (err) throw err;
 			return res.send(result);
 		});
