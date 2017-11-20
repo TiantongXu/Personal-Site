@@ -42,9 +42,21 @@ var model = (function(){
         });
     };
 
-    model.getMessages = function (callback) {
-        callApi("GET", "/api/experience/", null, true, callback);
+    model.addExperience = function (data, callback) {
+        callApi('POST', '/api/experience/', data, true, callback);
     };
+
+    model.addSkills = function (data, callback) {
+        callApi('POST', '/api/skills/', data, true, callback);
+    };
+
+    model.addEducation = function (data, callback) {
+        callApi('POST', '/api/education/', data, true, callback);
+    };
+
+    model.getExperience = function (callback) {
+        callApi('GET', '/api/experience/', null, true, callback);
+    }
 
     model.signOut = function (callback) {
         callApi('GET', '/api/signout/', null, false, callback);

@@ -23,6 +23,7 @@ var view = (function(){
         };
         document.getElementById("contact").onclick = function (e){
             e.preventDefault(e);
+            selectItem("contact");
             view.renderPage("contact");
         };
         document.getElementById("admin").onclick = function (e){
@@ -40,7 +41,9 @@ var view = (function(){
                 $(".error").empty();
                 break;
             case "resume":
-                $(".container").load("./tmp/resume.html");
+                $(".container").load("./tmp/resume.html", function() {
+                    renderResume(logstate)
+                });
                 selectItem("resume");
                 $(".error").empty();
                 break;
@@ -52,7 +55,7 @@ var view = (function(){
             case "admin":
                 $(".container").empty();
                 selectItem("admin");
-                view.renderAbout(logstate);
+                renderAbout(logstate);
                 break;
         };
     };
@@ -76,7 +79,7 @@ var view = (function(){
         }
     };
 
-    view.renderAbout = function (state) {
+    var renderAbout = function (state) {
         var container = document.getElementById('container');
         container.innerHTML = "";
         var doc = document.createElement('div');
@@ -90,9 +93,9 @@ var view = (function(){
             var content = document.createElement('form');
             content.id = "signin";
             content.innerHTML = `
-            <input type="text" name="username" id="username" class="form-control form_element" placeholder="Username"/>
+            <input type="text" name="username" id="username" class="form-control signin_form" placeholder="Username"/>
             <br>
-            <input type="password" name="password" id="password" class="form-control form_element" placeholder="Password"/>
+            <input type="password" name="password" id="password" class="form-control signin_form" placeholder="Password"/>
             <br>
             <button type="submit" class="btn">Login</button>`;
             content.onsubmit = function (e) {
@@ -103,7 +106,7 @@ var view = (function(){
                 model.signIn(info, function (err, user) {
                     if (err) return signinMessage(err);
                     signinMessage();
-                    view.checkState(view.renderAbout);
+                    view.checkState(renderAbout);
                 });
             }
         }
@@ -115,17 +118,108 @@ var view = (function(){
                 e.preventDefault();
                 model.signOut(function (err) {
                     if (err) console.log(err);
-                    view.checkState(view.renderAbout);
+                    view.checkState(renderAbout);
                 });
             };
         }
         innertext.append(content);
         doc.append(innertext);
         container.prepend(doc);
-        // document.getElementById("test").onsubmit = function (e) {
-        //     e.preventDefault();
-        //     model.getMessages();
-        // };
+    };
+
+    var renderBox = function (type) {
+        var doc = document.createElement('form');
+        switch (type) {
+            case "education":
+                var container = document.getElementById('education_add');
+                doc.id = "education_form";
+                doc.innerHTML = `<div class="col-lg-11 subtext row">
+    <textarea rows="5" name="details" id="education_details" class="col-lg-12 form-control form_element" placeholder="Details"></textarea>
+</div>
+<div class="col-lg-1 subtext">
+    <input type="submit" value="" class="resume_btn add_btn"></input>
+</div>`;
+                doc.onsubmit = function (e) {
+                    e.preventDefault();
+                        var info = {};
+                        info.details = document.getElementById("education_details").value;
+                        if (info.details) {
+                            model.addEducation(info, function(err) {
+                                if (err) return console.log(err);
+                            });
+                        }
+                        renderResume(logstate);
+                };
+                break;
+            case "skills":
+                var container = document.getElementById('skills_add');
+                doc.id = "skills_form";
+                doc.innerHTML = `<div class="col-lg-11 subtext row">
+    <textarea rows="5" name="details" id="skills_details" class="col-lg-12 form-control form_element" placeholder="Details"></textarea>
+</div>
+<div class="col-lg-1 subtext">
+    <input type="submit" value="" class="resume_btn add_btn"></input>
+</div>`;
+                doc.onsubmit = function (e) {
+                    e.preventDefault();
+                        var info = {};
+                        info.details = document.getElementById("skills_details").value;
+                        if (info.details) {
+                            model.addSkills(info, function(err) {
+                                if (err) return console.log(err);
+                            });
+                        }
+                        renderResume(logstate);
+                };
+                break;
+            case "experience":
+                var container = document.getElementById('job_add');
+                doc.id = "job_form";
+                doc.innerHTML = `<div class="col-lg-11 subtext row">
+    <input type="text" name="date" id="date" class="col-lg-4 form-control form-group form_element" placeholder="Date"/>
+    <input type="text" name="employer" id="employer" class="col-lg-4 form-control form-group form_element" placeholder="Employer"/>
+    <input type="text" name="place" id="place" class="col-lg-4 form-control form-group form_element" placeholder="Place"/>
+    <textarea rows="5" name="details" id="job_details" class="col-lg-12 form-control form_element" placeholder="Details"></textarea>
+</div>
+<div class="col-lg-1 subtext">
+    <input type="submit" value="" class="resume_btn add_btn"></input>
+</div>`;
+                doc.onsubmit = function (e) {
+                    e.preventDefault();
+                        var info = {};
+                        info.date = document.getElementById("date").value;
+                        info.employer = document.getElementById("employer").value;
+                        info.place = document.getElementById("place").value;
+                        info.details = document.getElementById("job_details").value;
+                        if (info.date && info.employer && info.place && info.details) {
+                            model.addExperience(info, function(err) {
+                                if (err) return console.log(err);
+                            });
+                        }
+                        renderResume(logstate);
+                };
+                break;
+        };
+        doc.className = "col-lg-12 row";
+        container.innerHTML = `<div class="row align-items-center mainrow">
+        </div>`;
+        container.prepend(doc);
+    };
+
+    var renderInfo = function (type) {
+        model.getExperience(function (err, data) {
+            if (err) return console.log(err);
+            console.log(data);
+        });
+    };
+
+    var renderResume = function (state) {
+        if (state === "true") {
+            renderBox("education");
+            renderBox("skills");
+            renderBox("experience");
+        }
+        renderInfo("experience");
     };
     
     return view;

@@ -30,12 +30,6 @@ app.use(express.static('frontend'));
 // 	console.log("got dat session");
 // });
 
-app.post('/api/experience/', function (req, res, next) {
-	if (!req.session.user) return res.status(403).end("Not authorized");
-	console.log(req.session.user);
-	return res.json(user);
-});
-
 app.post('/api/signin/', function (req, res, next) {
 	if (!req.body.username || !req.body.password) return res.status(400).send("Please fill in all the fields");
 	mongo.connect(url, function(err, db) {
@@ -62,6 +56,50 @@ app.get('/api/sign/', function (req, res, next) {
 	if (!req.session.user) return res.send('false');
 	return res.send('true');
 })
+
+app.post('/api/experience/', function (req, res, next) {
+	if (!req.session.user) return res.status(403).end("Not authorized");
+	mongo.connect(url, function(err, db) {
+	if (err) throw err;
+		db.collection('experience').save({date: req.body.date, employer: req.body.employer, place: req.body.place, details: req.body.details}, function(err, user) {
+			if (err) return res.status(500).end(err);
+		});
+	db.close();
+	});
+});
+
+app.post('/api/skills/', function (req, res, next) {
+	if (!req.session.user) return res.status(403).end("Not authorized");
+	mongo.connect(url, function(err, db) {
+	if (err) throw err;
+		db.collection('skills').save({details: req.body.details}, function(err, user) {
+			if (err) return res.status(500).end(err);
+		});
+	db.close();
+	});
+});
+
+app.post('/api/education/', function (req, res, next) {
+	if (!req.session.user) return res.status(403).end("Not authorized");
+	mongo.connect(url, function(err, db) {
+	if (err) throw err;
+		db.collection('education').save({details: req.body.details}, function(err, user) {
+			if (err) return res.status(500).end(err);
+		});
+	db.close();
+	});
+});
+
+app.get('/api/experience', function (req, res, next) {
+	mongo.connect(url, function(err, db) {
+	if (err) throw err;
+		db.collection('experience').find().toArray(function (err, result) {
+			if (err) throw err;
+			return res.send(result);
+		});
+	db.close();
+	});
+});
 
 var http = require('http');
 http.createServer(app).listen(3000, function () {

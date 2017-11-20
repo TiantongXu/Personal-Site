@@ -76,7 +76,7 @@ body {
     text-align: center;
 }
 
-.form_element {
+.signin_form {
     width: 30%;
     margin: auto;
 }
@@ -85,6 +85,30 @@ body {
     height: 30px;
     width: 100%;
     text-align: center;
+}
+
+.resume_btn {
+    background: none;
+    width: 64px;
+    height: 64px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size:64%;
+    text-align:center;
+    padding: 0;
+    border: none;
+}
+
+.check_btn {
+    background-image: url('/img/check.png');
+}
+
+.cross_btn {
+    background-image: url('/img/cross.png');
+}
+
+.add_btn {
+    background-image: url('/img/add.png');
 }
 
 @media (min-width: 700px){
