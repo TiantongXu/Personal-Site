@@ -55,7 +55,7 @@ var view = (function(){
             case "admin":
                 $(".container").empty();
                 selectItem("admin");
-                renderAbout(logstate);
+                renderAdmin(logstate);
                 break;
         };
     };
@@ -79,7 +79,7 @@ var view = (function(){
         }
     };
 
-    var renderAbout = function (state) {
+    var renderAdmin = function (state) {
         var container = document.getElementById('container');
         container.innerHTML = "";
         var doc = document.createElement('div');
@@ -106,7 +106,7 @@ var view = (function(){
                 model.signIn(info, function (err, user) {
                     if (err) return signinMessage(err);
                     signinMessage();
-                    view.checkState(renderAbout);
+                    view.checkState(renderAdmin);
                 });
             }
         }
@@ -118,7 +118,7 @@ var view = (function(){
                 e.preventDefault();
                 model.signOut(function (err) {
                     if (err) console.log(err);
-                    view.checkState(renderAbout);
+                    view.checkState(renderAdmin);
                 });
             };
         }
@@ -132,7 +132,10 @@ var view = (function(){
         switch (type) {
             case "education":
                 var container = document.getElementById('education_add');
-                doc.innerHTML = `Add Education:<div class="col-lg-11 subtext row">
+                doc.innerHTML = `<div class="col-lg-12 row">
+    Add Education:
+</div>
+<div class="col-lg-11 subtext row">
     <textarea rows="5" name="details" id="education_details" class="col-lg-12 form-control form_element" placeholder="Details"></textarea>
 </div>
 <div class="col-lg-1 subtext">
@@ -140,20 +143,23 @@ var view = (function(){
 </div>`;
                 doc.onsubmit = function (e) {
                     e.preventDefault();
-                        var info = {};
-                        info.details = document.getElementById("education_details").value;
-                        if (info.details) {
-                            model.addEducation(info, function(err) {
-                                if (err) return console.log(err);
-                                $("#skills,#job,#education").empty();
-                                renderResume(logstate);
-                            });
-                        }
+                    var info = {};
+                    info.details = document.getElementById("education_details").value;
+                    if (info.details) {
+                        model.addEducation(info, function(err) {
+                            if (err) return console.log(err);
+                            $("#skills,#job,#education").empty();
+                            renderResume(logstate);
+                        });
+                    }
                 };
                 break;
             case "skills":
                 var container = document.getElementById('skills_add');
-                doc.innerHTML = `Add Skills:<div class="col-lg-11 subtext row">
+                doc.innerHTML = `<div class="col-lg-12 row">
+    Add Skills:
+</div>
+<div class="col-lg-11 subtext row">
     <textarea rows="5" name="details" id="skills_details" class="col-lg-12 form-control form_element" placeholder="Details"></textarea>
 </div>
 <div class="col-lg-1 subtext">
@@ -161,23 +167,27 @@ var view = (function(){
 </div>`;
                 doc.onsubmit = function (e) {
                     e.preventDefault();
-                        var info = {};
-                        info.details = document.getElementById("skills_details").value;
-                        if (info.details) {
-                            model.addSkills(info, function(err) {
-                                if (err) return console.log(err);
-                                $("#skills,#job,#education").empty();
-                                renderResume(logstate);
-                            });
-                        }
+                    var info = {};
+                    info.details = document.getElementById("skills_details").value;
+                    if (info.details) {
+                        model.addSkills(info, function(err) {
+                            if (err) return console.log(err);
+                            $("#skills,#job,#education").empty();
+                            renderResume(logstate);
+                        });
+                    }
                 };
                 break;
             case "experience":
                 var container = document.getElementById('job_add');
-                doc.innerHTML = `Add Job Experience:<div class="col-lg-11 subtext row">
+                doc.innerHTML = `<div class="col-lg-12 row">
+Add Job Experience:
+</div>
+<div class="col-lg-11 subtext row">
     <input type="text" name="date" id="date" class="col-lg-4 form-control form-group form_element" placeholder="Date"/>
     <input type="text" name="employer" id="employer" class="col-lg-4 form-control form-group form_element" placeholder="Employer"/>
     <input type="text" name="place" id="place" class="col-lg-4 form-control form-group form_element" placeholder="Place"/>
+    <input type="text" name="position" id="position" class="col-lg-6 form-control form-group form_element" placeholder="Position"/>
     <textarea rows="5" name="details" id="job_details" class="col-lg-12 form-control form_element" placeholder="Details"></textarea>
 </div>
 <div class="col-lg-1 subtext">
@@ -185,18 +195,19 @@ var view = (function(){
 </div>`;
                 doc.onsubmit = function (e) {
                     e.preventDefault();
-                        var info = {};
-                        info.date = document.getElementById("date").value;
-                        info.employer = document.getElementById("employer").value;
-                        info.place = document.getElementById("place").value;
-                        info.details = document.getElementById("job_details").value;
-                        if (info.date && info.employer && info.place && info.details) {
-                            model.addExperience(info, function(err) {
-                                if (err) return console.log(err);
-                                $("#skills,#job,#education").empty();
-                                renderResume(logstate);
-                            });
-                        }
+                    var info = {};
+                    info.date = document.getElementById("date").value;
+                    info.employer = document.getElementById("employer").value;
+                    info.place = document.getElementById("place").value;
+                    info.position = document.getElementById("position").value;
+                    info.details = document.getElementById("job_details").value;
+                    if (info.date && info.employer && info.place && info.details && info.position) {
+                        model.addExperience(info, function(err) {
+                            if (err) return console.log(err);
+                            $("#skills,#job,#education").empty();
+                            renderResume(logstate);
+                        });
+                    }
                 };
                 break;
         };
@@ -229,25 +240,25 @@ var view = (function(){
 </div>`;
                     checkbtn.onclick = function (e) {
                         e.preventDefault();
-                            var info = {};
-                            info.details = document.getElementById(data._id).value;
-                            info._id = data._id;
-                            if (info.details) {
-                                model.updateEducation(info, function(err) {
-                                    if (err) return console.log(err);
-                                    $("#skills,#job,#education").empty();
-                                    renderResume(logstate);
-                                });
-                            }
-                            
-                    };
-                    crossbtn.onclick = function (e) {
-                        e.preventDefault();
-                            model.deleteEducation(data._id, function(err) {
+                        var info = {};
+                        info.details = document.getElementById(data._id).value;
+                        info._id = data._id;
+                        if (info.details) {
+                            model.updateEducation(info, function(err) {
                                 if (err) return console.log(err);
                                 $("#skills,#job,#education").empty();
                                 renderResume(logstate);
                             });
+                        }
+                            
+                    };
+                    crossbtn.onclick = function (e) {
+                        e.preventDefault();
+                        model.deleteEducation(data._id, function(err) {
+                            if (err) return console.log(err);
+                            $("#skills,#job,#education").empty();
+                            renderResume(logstate);
+                        });
                     };
                 }
                 else {
@@ -262,25 +273,25 @@ var view = (function(){
     <textarea rows="5" name="details" id='${data._id}' class="col-lg-12 form-control form_element" placeholder="Details">${data.details}</textarea>
 </div>`;
                     checkbtn.onclick = function (e) {
-                        e.preventDefault();
-                            var info = {};
-                            info.details = document.getElementById(data._id).value;
-                            info._id = data._id;
-                            if (info.details) {
-                                model.updateSkills(info, function(err) {
-                                    if (err) return console.log(err);
-                                });
-                                $("#skills,#job,#education").empty();
-                                renderResume(logstate);
-                            }
+                    e.preventDefault();
+                        var info = {};
+                        info.details = document.getElementById(data._id).value;
+                        info._id = data._id;
+                        if (info.details) {
+                            model.updateSkills(info, function(err) {
+                                if (err) return console.log(err);
+                            });
+                            $("#skills,#job,#education").empty();
+                            renderResume(logstate);
+                        }
                     };
                     crossbtn.onclick = function (e) {
                         e.preventDefault();
-                            model.deleteSkills(data._id, function(err) {
-                                if (err) return console.log(err);
-                                $("#skills,#job,#education").empty();
-                                renderResume(logstate);
-                            });
+                        model.deleteSkills(data._id, function(err) {
+                            if (err) return console.log(err);
+                            $("#skills,#job,#education").empty();
+                            renderResume(logstate);
+                        });
                     };
                 }
                 else {
@@ -294,36 +305,39 @@ var view = (function(){
                     var dateid = data._id + "_date";
                     var employerid = data._id + "_employer";
                     var placeid = data._id + "_place";
+                    var positionid = data._id + "_position";
                     var detailsid = data._id + "_details";
                     doc.innerHTML = `<div class="col-lg-11 subtext row">
     <input type="text" name="date" id='${dateid}' class="col-lg-4 form-control form-group form_element" placeholder="Date" value='${data.date}'/>
     <input type="text" name="employer" id='${employerid}' class="col-lg-4 form-control form-group form_element" placeholder="Employer" value='${data.employer}'/>
     <input type="text" name="place" id='${placeid}' class="col-lg-4 form-control form-group form_element" placeholder="Place" value='${data.place}'/>
+    <input type="text" name="position" id='${positionid}' class="col-lg-6 form-control form-group form_element" placeholder="Position" value='${data.position}'/>
     <textarea rows="5" name="details" id='${detailsid}' class="col-lg-12 form-control form_element" placeholder="Details">${data.details}</textarea>
 </div>`;
                     checkbtn.onclick = function (e) {
                         e.preventDefault();
-                            var info = {};
-                            info.date = document.getElementById(dateid).value;
-                            info.employer = document.getElementById(employerid).value;
-                            info.place = document.getElementById(placeid).value;
-                            info.details = document.getElementById(detailsid).value;
-                            info._id = data._id;
-                            if (info.date && info.employer && info.place && info.details) {
-                                model.updateExperience(info, function(err) {
-                                    if (err) return console.log(err);
-                                    $("#skills,#job,#education").empty();
-                                    renderResume(logstate);
-                                });
-                            }
-                    };
-                    crossbtn.onclick = function (e) {
-                        e.preventDefault();
-                            model.deleteExperience(data._id, function(err) {
+                        var info = {};
+                        info.date = document.getElementById(dateid).value;
+                        info.employer = document.getElementById(employerid).value;
+                        info.place = document.getElementById(placeid).value;
+                        info.position = document.getElementById(positionid).value;
+                        info.details = document.getElementById(detailsid).value;
+                        info._id = data._id;
+                        if (info.date && info.employer && info.place && info.details && info.position) {
+                            model.updateExperience(info, function(err) {
                                 if (err) return console.log(err);
                                 $("#skills,#job,#education").empty();
                                 renderResume(logstate);
                             });
+                        }
+                    };
+                    crossbtn.onclick = function (e) {
+                        e.preventDefault();
+                        model.deleteExperience(data._id, function(err) {
+                            if (err) return console.log(err);
+                            $("#skills,#job,#education").empty();
+                            renderResume(logstate);
+                        });
                     };
                 }
                 else {
@@ -337,6 +351,9 @@ var view = (function(){
     <div class="col-lg-4">
     ${data.place}
 </div>
+</div>
+    <div class="col-lg-6 row">
+    ${data.position}
 </div>
 <div class="col-lg-12 row experience_body">
     ${data.details}

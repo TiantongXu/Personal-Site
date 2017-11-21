@@ -97,7 +97,7 @@ app.post('/api/experience/', function (req, res, next) {
 	if (!req.session.user) return res.status(403).end("Not authorized");
 	mongo.connect(url, function(err, db) {
 	if (err) throw err;
-		db.collection('experience').save({date: req.body.date, employer: req.body.employer, place: req.body.place, details: req.body.details}, function(err, user) {
+		db.collection('experience').save({date: req.body.date, employer: req.body.employer, place: req.body.place, position:req.body.position, details: req.body.details}, function(err, user) {
 			if (err) return res.status(500).end(err);
 			return res.json(user);
 			db.close();
@@ -137,7 +137,7 @@ app.patch('/api/experience/:id/', function (req, res, next) {
 	if (!req.session.user) return res.status(403).end("Not authorized");
 	mongo.connect(url, function(err, db) {
 		if (err) throw err;
-		db.collection('experience').update({_id: new mongo.ObjectID(req.body._id)}, {date: req.body.date, employer: req.body.employer, place: req.body.place, details: req.body.details}, function (err) {
+		db.collection('experience').update({_id: new mongo.ObjectID(req.body._id)}, {date: req.body.date, employer: req.body.employer, place: req.body.place, position: req.body.position, details: req.body.details}, function (err) {
 			if (err) return res.status(500).send("Database error");
 			db.close();
 			return res.json("");
