@@ -9,10 +9,6 @@ var model = (function(){
         view.renderPage("about");
     };
 
-    // model.addExperience = function (data, callback) {
-
-    // };
-
     var callApi = function (method, url, body, isjson, callback){
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function(e){

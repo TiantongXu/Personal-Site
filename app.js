@@ -1,6 +1,4 @@
 var crypto = require('crypto');
-// var Memcached = require('memcached');
-// var memcached = new Memcached('localhost:11211');
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
@@ -8,7 +6,7 @@ var mongo = require('mongodb');
 var session = require('express-session');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-var url = "mongodb://txadmin:Scarlet6@ds127063.mlab.com:27063/txsitedb";
+var url = "mongodb://admin:password@ds127063.mlab.com:27063/txsitedb";
 
 var authorized = false;
 
@@ -25,10 +23,6 @@ var validateInfo = function (user, password) {
 };
 
 app.use(express.static('frontend'));
-
-// app.get('/', function (req, res, next) {
-// 	console.log("got dat session");
-// });
 
 app.post('/api/signin/', function (req, res, next) {
 	if (!req.body.username || !req.body.password) return res.status(400).send("Please fill in all the fields");
