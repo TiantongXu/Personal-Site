@@ -55,7 +55,43 @@ app.get('/api/signout/', function (req, res, next) {
 app.get('/api/sign/', function (req, res, next) {
 	if (!req.session.user) return res.send('false');
 	return res.send('true');
-})
+});
+
+app.get('/api/experience/', function (req, res, next) {
+	mongo.connect(url, function(err, db) {
+	if (err) throw err;
+		db.collection('experience').find().toArray(function (err, result) {
+			if (err) return res.status(500).send("Database error");
+			db.close();
+			return res.send(result);
+		});
+		db.close();
+	});
+});
+
+app.get('/api/education/', function (req, res, next) {
+	mongo.connect(url, function(err, db) {
+	if (err) throw err;
+		db.collection('education').find().toArray(function (err, result) {
+			if (err) return res.status(500).send("Database error");
+			db.close();
+			return res.send(result);
+		});
+		db.close();
+	});
+});
+
+app.get('/api/skills/', function (req, res, next) {
+	mongo.connect(url, function(err, db) {
+	if (err) throw err;
+		db.collection('skills').find().toArray(function (err, result) {
+			if (err) return res.status(500).send("Database error");
+			db.close();
+			return res.send(result);
+		});
+		db.close();
+	});
+});
 
 app.post('/api/experience/', function (req, res, next) {
 	if (!req.session.user) return res.status(403).end("Not authorized");
@@ -63,8 +99,10 @@ app.post('/api/experience/', function (req, res, next) {
 	if (err) throw err;
 		db.collection('experience').save({date: req.body.date, employer: req.body.employer, place: req.body.place, details: req.body.details}, function(err, user) {
 			if (err) return res.status(500).end(err);
+			return res.json(user);
+			db.close();
 		});
-	db.close();
+		db.close();
 	});
 });
 
@@ -74,8 +112,10 @@ app.post('/api/skills/', function (req, res, next) {
 	if (err) throw err;
 		db.collection('skills').save({details: req.body.details}, function(err, user) {
 			if (err) return res.status(500).end(err);
+			return res.json(user);
+			db.close();
 		});
-	db.close();
+		db.close();
 	});
 });
 
@@ -85,50 +125,24 @@ app.post('/api/education/', function (req, res, next) {
 	if (err) throw err;
 		db.collection('education').save({details: req.body.details}, function(err, user) {
 			if (err) return res.status(500).end(err);
+			return res.json(user);
+			db.close();
 		});
-	db.close();
+		db.close();
 	});
 });
 
-app.get('/api/experience/', function (req, res, next) {
-	mongo.connect(url, function(err, db) {
-	if (err) throw err;
-		db.collection('experience').find().toArray(function (err, result) {
-			if (err) throw err;
-			return res.send(result);
-		});
-	db.close();
-	});
-});
-
-app.get('/api/education/', function (req, res, next) {
-	mongo.connect(url, function(err, db) {
-	if (err) throw err;
-		db.collection('education').find().toArray(function (err, result) {
-			if (err) throw err;
-			return res.send(result);
-		});
-	db.close();
-	});
-});
-
-app.get('/api/skills/', function (req, res, next) {
-	mongo.connect(url, function(err, db) {
-	if (err) throw err;
-		db.collection('skills').find().toArray(function (err, result) {
-			if (err) throw err;
-			return res.send(result);
-		});
-	db.close();
-	});
-});
 
 app.patch('/api/experience/:id/', function (req, res, next) {
 	if (!req.session.user) return res.status(403).end("Not authorized");
 	mongo.connect(url, function(err, db) {
 		if (err) throw err;
-		db.collection('experience').update({_id: new mongo.ObjectID(req.body._id)}, {date: req.body.date, employer: req.body.employer, place: req.body.place, details: req.body.details});
-	db.close();
+		db.collection('experience').update({_id: new mongo.ObjectID(req.body._id)}, {date: req.body.date, employer: req.body.employer, place: req.body.place, details: req.body.details}, function (err) {
+			if (err) return res.status(500).send("Database error");
+			db.close();
+			return res.json("");
+		});
+		db.close();
 	});
 });
 
@@ -136,8 +150,12 @@ app.patch('/api/education/:id/', function (req, res, next) {
 	if (!req.session.user) return res.status(403).end("Not authorized");
 	mongo.connect(url, function(err, db) {
 		if (err) throw err;
-		db.collection('education').update({_id: new mongo.ObjectID(req.body._id)}, {details: req.body.details});
-	db.close();
+		db.collection('education').update({_id: new mongo.ObjectID(req.body._id)}, {details: req.body.details}, function (err) {
+			if (err) return res.status(500).send("Database error");
+			db.close();
+			return res.json("");
+		});
+		db.close();
 	});
 });
 
@@ -145,8 +163,12 @@ app.patch('/api/skills/:id/', function (req, res, next) {
 	if (!req.session.user) return res.status(403).end("Not authorized");
 	mongo.connect(url, function(err, db) {
 		if (err) throw err;
-		db.collection('skills').update({_id: new mongo.ObjectID(req.body._id)}, {details: req.body.details});
-	db.close();
+		db.collection('skills').update({_id: new mongo.ObjectID(req.body._id)}, {details: req.body.details}, function (err) {
+			if (err) return res.status(500).send("Database error");
+			db.close();
+			return res.json("");
+		});
+		db.close();
 	});
 });
 
@@ -154,8 +176,12 @@ app.delete('/api/experience/:id/', function (req, res, next) {
 	if (!req.session.user) return res.status(403).end("Not authorized");
 	mongo.connect(url, function(err, db) {
 		if (err) throw err;
-		db.collection('experience').remove({_id: new mongo.ObjectID(req.params.id)});
-	db.close();
+		db.collection('experience').remove({_id: new mongo.ObjectID(req.params.id)}, function (err) {
+			if (err) return res.status(500).send("Database error");
+			db.close();
+			return res.end();
+		});
+		db.close();
 	});
 });
 
@@ -163,8 +189,12 @@ app.delete('/api/skills/:id/', function (req, res, next) {
 	if (!req.session.user) return res.status(403).end("Not authorized");
 	mongo.connect(url, function(err, db) {
 		if (err) throw err;
-		db.collection('skills').remove({_id: new mongo.ObjectID(req.params.id)});
-	db.close();
+		db.collection('skills').remove({_id: new mongo.ObjectID(req.params.id)}, function (err) {
+			if (err) return res.status(500).send("Database error");
+			db.close();
+			return res.end();
+		});
+		db.close();
 	});
 });
 
@@ -172,8 +202,12 @@ app.delete('/api/education/:id/', function (req, res, next) {
 	if (!req.session.user) return res.status(403).end("Not authorized");
 	mongo.connect(url, function(err, db) {
 		if (err) throw err;
-		db.collection('education').remove({_id: new mongo.ObjectID(req.params.id)});
-	db.close();
+		db.collection('education').remove({_id: new mongo.ObjectID(req.params.id)}, function (err) {
+			if (err) return res.status(500).send("Database error");
+			db.close();
+			return res.end();
+		});
+		db.close();
 	});
 });
 

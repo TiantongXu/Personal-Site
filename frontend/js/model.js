@@ -78,16 +78,16 @@ var model = (function(){
         callApi('PATCH', '/api/skills/' + data._id + '/', data, true, callback);
     };
 
-    model.deleteExperience = function (data, callback) {
-        callApi('DELETE', '/api/experience/' + data._id + '/', null, false, callback);
+    model.deleteExperience = function (id, callback) {
+        callApi('DELETE', '/api/experience/' + id + '/', null, false, callback);
     };
 
-    model.deleteEducation = function (data, callback) {
-        callApi('DELETE', '/api/education/' + data._id + '/', null, false, callback);
+    model.deleteEducation = function (id, callback) {
+        callApi('DELETE', '/api/education/' + id + '/', null, false, callback);
     };
 
-    model.deleteSkills = function (data, callback) {
-        callApi('DELETE', '/api/skills/' + data._id + '/', null, false, callback);
+    model.deleteSkills = function (id, callback) {
+        callApi('DELETE', '/api/skills/' + id + '/', null, false, callback);
     };
 
     model.signOut = function (callback) {

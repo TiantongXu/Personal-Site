@@ -107,6 +107,17 @@ body {
     background-image: url('/img/cross.png');
 }
 
+.experience_head {
+    font-size: 20px;
+    font-weight: bold;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.experience_body {
+    padding-bottom: 20px;
+}
+
 .add_btn {
     background-image: url('/img/add.png');
 }
