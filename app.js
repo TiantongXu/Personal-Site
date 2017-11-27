@@ -6,14 +6,13 @@ var mongo = require('mongodb');
 var session = require('express-session');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-var url = "mongodb://admin:password@ds127063.mlab.com:27063/txsitedb";
-
-var authorized = false;
+var url = "mongodb://admin:pass@ds127063.mlab.com:27063/txsitedb";
 
 app.use(session ({
 	secret: 'Secret site token',
 	resave: false,
 	saveUninitialized: true,
+	cookie: {sameSite: true, maxAge: 1000 * 60 * 60},
 }));
 
 var validateInfo = function (user, password) {
@@ -32,7 +31,8 @@ app.post('/api/signin/', function (req, res, next) {
 			if (err) return res.status(500).end(err);
 			if (!user || !validateInfo(user, req.body.password)) return res.status(401).end("Incorrect username/password");
 			req.session.user = user;
-			res.cookie('username', user.username, {secure: true, sameSite: true});
+			res.cookie('username', user.username, {sameSite: true, maxAge: 1000 * 60 * 60});
+			console.log(req.session.user);
 			return res.json(user);
 		});
 	db.close();
@@ -40,6 +40,7 @@ app.post('/api/signin/', function (req, res, next) {
 });
 
 app.get('/api/signout/', function (req, res, next) {
+	console.log(req.session.user);
     req.session.destroy(function(err) {
         if (err) return res.status(500).end(err);
         return res.end();
@@ -206,6 +207,6 @@ app.delete('/api/education/:id/', function (req, res, next) {
 });
 
 var http = require('http');
-http.createServer(app).listen(3000, function () {
+http.createServer(app).listen(8080, function () {
 	console.log('HTTP on port 3000');
 });
