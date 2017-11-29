@@ -122,6 +122,10 @@ body {
     background-image: url('/img/add.png');
 }
 
+.nav-item {
+    cursor: pointer;
+}
+
 @media (min-width: 700px){
     .navbar li {
         font-weight: bold;

@@ -4,11 +4,19 @@ var app = express();
 var bodyParser = require('body-parser');
 var mongo = require('mongodb');
 var session = require('express-session');
+var RedisStore = require('connect-redis')(session);
+var redis = require("redis");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-var url = "mongodb://admin:pass@ds127063.mlab.com:27063/txsitedb";
+var url = "mongodb://txadmin:Scarlet6@ds127063.mlab.com:27063/txsitedb";
+var redisClient = redis.createClient({host: 'redis-12933.c1.us-west-2-2.ec2.cloud.redislabs.com', port: 12933});
+
+redisClient.auth('1993531', function (err) {
+    if (err) console.log(err);
+});
 
 app.use(session ({
+	store: new RedisStore({client: redisClient}),
 	secret: 'Secret site token',
 	resave: false,
 	saveUninitialized: true,
@@ -32,7 +40,6 @@ app.post('/api/signin/', function (req, res, next) {
 			if (!user || !validateInfo(user, req.body.password)) return res.status(401).end("Incorrect username/password");
 			req.session.user = user;
 			res.cookie('username', user.username, {sameSite: true, maxAge: 1000 * 60 * 60});
-			console.log(req.session.user);
 			return res.json(user);
 		});
 	db.close();
@@ -40,7 +47,6 @@ app.post('/api/signin/', function (req, res, next) {
 });
 
 app.get('/api/signout/', function (req, res, next) {
-	console.log(req.session.user);
     req.session.destroy(function(err) {
         if (err) return res.status(500).end(err);
         return res.end();
@@ -208,5 +214,5 @@ app.delete('/api/education/:id/', function (req, res, next) {
 
 var http = require('http');
 http.createServer(app).listen(8080, function () {
-	console.log('HTTP on port 3000');
+	console.log('HTTP up and running running on port 8080');
 });
