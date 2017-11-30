@@ -8,10 +8,10 @@ var RedisStore = require('connect-redis')(session);
 var redis = require("redis");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-var url = "mongodb://txadmin:Scarlet6@ds127063.mlab.com:27063/txsitedb";
-var redisClient = redis.createClient({host: 'redis-12933.c1.us-west-2-2.ec2.cloud.redislabs.com', port: 12933});
+var url = ;
+var redisClient = redis.createClient({host: , port: });
 
-redisClient.auth('1993531', function (err) {
+redisClient.auth(, function (err) {
     if (err) console.log(err);
 });
 
