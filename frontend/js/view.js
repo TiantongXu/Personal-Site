@@ -26,6 +26,11 @@ var view = (function(){
             selectItem("contact");
             view.renderPage("contact");
         };
+        document.getElementById("credits").onclick = function (e){
+            e.preventDefault(e);
+            selectItem("credits");
+            view.renderPage("credits");
+        };
         document.getElementById("admin").onclick = function (e){
             e.preventDefault(e);
             selectItem("admin");
@@ -50,6 +55,11 @@ var view = (function(){
             case "contact":
                 $(".container").load("./tmp/contact.html");
                 selectItem("contact");
+                $(".error").empty();
+                break;
+            case "credits":
+                $(".container").load("./tmp/credits.html");
+                selectItem("credits");
                 $(".error").empty();
                 break;
             case "admin":
